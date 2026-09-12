@@ -49,8 +49,8 @@ npm run validate     # alleen de structurele controle
 | Nabijheid voorzieningen | CBS StatLine 80305NED |
 | Buurtstatistieken, inkomen | CBS Kerncijfers wijken en buurten |
 | Energieverbruik per buurt | CBS StatLine 81528NED |
-| Marktcontext, bodemgebruik, zon, prognose | CBS StatLine |
-| Geregistreerde misdrijven | CBS/Politie |
+| Marktcontext, bodemgebruik, zonnestroom | CBS StatLine |
+| Geregistreerde misdrijven | CBS/Politie, tabel 47018NED op `dataderden.cbs.nl` |
 | Klimaat, geluid, aardbeving, monument | Diverse, met terugval |
 
 Elk onderdeel faalt zelfstandig. Valt een bron weg, dan blijft het veld op
@@ -118,6 +118,19 @@ reproduceerbaar is. Zonder tag is die belofte leeg.
 Een verversing van `data/cbs/` is géén modelwijziging: de rekenregels blijven
 gelijk.
 
+**Drie OData-hosts.** CBS publiceert niet alles op één host. StatLine staat op
+`opendata.cbs.nl` en `datasets.cbs.nl`; tabellen van derden, waaronder de
+politiecijfers, staan in een eigen catalogus op `dataderden.cbs.nl`. Alle drie
+worden geprobeerd. Ontbreekt een host, dan lijkt een tabel onvindbaar terwijl
+het nummer klopt.
+
+**Geen regionale bevolkingsprognose.** Dat is een bewuste keuze, geen gemis.
+CBS en PBL hebben de detailcijfers van de regionale prognose van StatLine
+verwijderd omdat die onvoldoende betrouwbaar bleken, en adviseren uitdrukkelijk
+ze niet te gebruiken. Wat resteert is het totaal aantal inwoners, en alleen voor
+gemeenten vanaf 50.000 inwoners. De tool toont daarom de huidige vergrijzing in
+de buurt, met de melding dat het geen vooruitzicht is.
+
 **Een CBS-tabel valt weg.** De workflow meldt dat in de stapsamenvatting. Zoek
 het nieuwe nummer op <https://opendata.cbs.nl/statline>, vul het aan bij
 `ONDERWERPEN` in `scripts/fetch_statline.py` én bij `STATLINE` in `index.html`.
@@ -159,5 +172,12 @@ indexatie van de waardeberekening, contrastverhoudingen en de printopmaak.
 - **CORS wordt bepaald door de bronhouder**, niet door waar deze pagina staat.
   GitHub Pages lost dat niet op. Wilt u dat wel oplossen, dan is een kleine
   serverloze functie nodig; zie [docs/deploy.md](docs/deploy.md).
+- **Het energielabel vereist een keuze.** De EP-Online API vraagt een
+  abonnementssleutel; zonder sleutel of bulkexport valt de tool terug op een
+  schatting op bouwjaar, en meldt dan expliciet dat niet is vastgesteld of er
+  een geregistreerd label bestaat. Zie [docs/deploy.md](docs/deploy.md).
+- **Woningtype is een afleiding.** De BAG kent geen veld voor woningtype. Het
+  wordt bepaald uit de pandcontour en het aantal verblijfsobjecten, en staat als
+  schatting in de herkomsttabel.
 - **De indicatieve waarde is geen taxatie.** Twee methodes naast elkaar, met de
   spreiding als signaal. Zie [docs/compliance.md](docs/compliance.md).

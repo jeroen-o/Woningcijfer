@@ -1,0 +1,53 @@
+name: Publiceren
+
+# Publiceert naar GitHub Pages, maar alleen als de controle groen is.
+# Zo kan een gebroken tool niet live komen.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  controle:
+    uses: ./.github/workflows/ci.yml
+
+  publiceren:
+    needs: controle
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Site samenstellen
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          touch _site/.nojekyll
+          # data/ meenemen als die bestaat
+          if [ -d data ]; then
+            mkdir -p _site/data
+            cp -r data/. _site/data/ 2>/dev/null || true
+            # Lege mappen met alleen .gitkeep hoeven niet mee
+            find _site/data -name '.gitkeep' -delete
+          fi
+          if [ -f CNAME ]; then cp CNAME _site/; fi
+          echo "Gepubliceerd: $(du -sh _site | cut -f1)"
+          find _site -maxdepth 2 -type d | head -20
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

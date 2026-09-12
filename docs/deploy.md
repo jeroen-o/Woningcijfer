@@ -46,6 +46,44 @@ Een gemist veld betekent doorgaans dat CBS een kolomnaam heeft gewijzigd.
 
 ---
 
+## Energielabels: twee routes
+
+### Route 1 — bulkexport (aanbevolen)
+
+Geen sleutel nodig, werkt op een publieke site. Zie hieronder.
+
+### Route 2 — EP-Online API
+
+De API is openbaar maar niet vrij: elk verzoek vereist een
+abonnementssleutel. Vraag die gratis aan via <https://www.ep-online.nl>
+(Ontwikkelaars / API). Zonder sleutel antwoordt de dienst met 401 en valt de
+tool terug op een schatting op bouwjaar.
+
+Sleutel instellen, in volgorde van voorkeur:
+
+```js
+// Vanuit de omliggende pagina, zodat hij niet in index.html staat
+epoSleutelInstellen('uw-sleutel');
+```
+
+```
+?epokey=uw-sleutel        // alleen om te testen
+```
+
+Of vul `EPO_API.sleutel` in `index.html` in.
+
+⚠️ **Een sleutel in de pagina is voor iedere bezoeker leesbaar.** Doe dat
+alleen op een besloten omgeving. Voor een publieke site is de bulkexport de
+juiste route, of een serverloze functie die de sleutel achter zich houdt.
+
+Controleer de status in de browserconsole:
+
+```js
+epoStatus()
+// { sleutelIngesteld: false, laatsteFout: 'geen-sleutel',
+//   bulkActief: true, bulkAanwezig: false, peildatum: null }
+```
+
 ## Energielabels klaarzetten
 
 ```bash

@@ -1,0 +1,59 @@
+name: Controle
+
+# Draait bij elke wijziging. Vangt de fouten die een browser niet meldt:
+# klassen zonder stijlregel, hosts buiten de CSP, een printblad dat achterloopt,
+# en gedragsregressies in de 280 toetsen.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:        # pages.yml roept deze controle aan voor het publiceren
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Afhankelijkheden installeren
+        run: npm ci
+
+      - name: JavaScript-syntaxcontrole
+        run: |
+          python3 - <<'PY'
+          import io, re, subprocess, sys
+          s = io.open('index.html', encoding='utf-8').read()
+          m = re.search(r'<script>\n(.*)\n</script>', s, re.S)
+          if not m:
+              sys.exit('geen scriptblok gevonden in index.html')
+          io.open('/tmp/check.js', 'w', encoding='utf-8').write(m.group(1))
+          PY
+          node --check /tmp/check.js
+
+      - name: Structurele controle
+        run: python3 scripts/validate_html.py index.html
+
+      - name: Gedragstoetsen
+        run: node tests/run.js --stil
+
+      - name: Omvang van de tool
+        run: |
+          kb=$(( $(stat -c%s index.html) / 1024 ))
+          echo "index.html is ${kb} kB"
+          # De tool moet één bestand blijven dat in een iframe te laden is
+          if [ "$kb" -gt 600 ]; then
+            echo "::warning::index.html is groter dan 600 kB; overweeg opsplitsen"
+          fi
