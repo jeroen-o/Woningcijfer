@@ -1,0 +1,51 @@
+name: Energielabels bouwen
+on:
+  workflow_dispatch:
+    inputs:
+      csv_url:
+        description: 'Directe download-URL van de EP-Online bulkexport CSV (~1,6 GB). Token in de URL meegeven indien nodig.'
+        required: true
+      peildatum:
+        description: 'Peildatum YYYY-MM-DD (leeg = uit bestandsnaam afleiden)'
+        required: false
+permissions:
+  contents: write
+  actions: write
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bulkexport downloaden
+        env:
+          CSV_URL: ${{ github.event.inputs.csv_url }}
+        run: |
+          curl -fSL "$CSV_URL" -o export.csv
+          ls -lh export.csv
+      - name: Shards bouwen
+        env:
+          PEIL: ${{ github.event.inputs.peildatum }}
+        run: |
+          if [ -n "$PEIL" ]; then
+            python3 scripts/epo_shard.py export.csv --uit data/labels --peildatum "$PEIL"
+          else
+            python3 scripts/epo_shard.py export.csv --uit data/labels
+          fi
+          rm -f export.csv
+      - name: Vastleggen en publiceren
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain data/labels)" ]; then
+            echo "Geen wijzigingen in data/labels."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/labels
+          git commit -m "Energielabels verversen"
+          git push
+          gh workflow run pages.yml --ref main
