@@ -1,0 +1,19 @@
+# Afhankelijkheden
+node_modules/
+
+# De EP-Online bulkexport en de uitkomst daarvan staan standaard NIET in de
+# repository. Publicatie van de volledige dataset is een bewuste keuze met
+# licentiegevolgen; zie docs/compliance.md.
+data/labels/
+!data/labels/.gitkeep
+*.csv
+v*_v*_csv.csv
+v*_v*_xml.xml
+v*_v*_xlsx.xlsx
+
+# Tijdelijke bestanden
+/tmp/
+*.log
+.DS_Store
+_site/
+check.js

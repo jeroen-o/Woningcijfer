@@ -18,6 +18,7 @@
     https://geodata.nationaalgeoregister.nl
     https://opendata.cbs.nl
     https://datasets.cbs.nl
+    https://dataderden.cbs.nl
     https://www.wozwaardeloket.nl;
   img-src 'self' data: blob: https://service.pdok.nl https://api.pdok.nl;
   frame-ancestors *;
@@ -195,9 +196,12 @@ figcaption {
 }
 .btn svg { display: block; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
-.btn-primary:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
-.btn-primary:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+.btn-primary { color: var(--color-wait-ink); background: var(--color-wait);
+  border-color: var(--color-wait-deep); font-weight: 600; }
+
+.btn-primary:hover { background: var(--color-wait-deep); border-color: var(--color-wait-deep); }
+
+.btn-primary:active { background: #b0741a; border-color: #b0741a; }
 .btn-secondary { border-color: var(--color-divider); }
 .btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
 .btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
@@ -384,9 +388,10 @@ button, input, select, textarea { font-family: inherit; }
 .search-input:hover { border-color: var(--color-neutral-600); }
 .search-input:focus { border-color: var(--color-accent); }
 .search-input::placeholder { color: var(--color-neutral-600); }
-.search-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0 18px; min-height: 44px; font-size: 14px; font-weight: 500; color: var(--color-accent); background: transparent; border: 1px solid var(--color-accent); border-radius: var(--radius-md); cursor: pointer; white-space: nowrap; }
-.search-btn:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
-.search-btn:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+.search-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0 18px; min-height: 44px; font-size: 14px; font-weight: 500; color: var(--color-wait-ink); background: var(--color-wait); border: 1px solid var(--color-wait-deep); font-weight: 600; border-radius: var(--radius-md); cursor: pointer; white-space: nowrap; }
+.search-btn:hover { background: var(--color-wait-deep); border-color: var(--color-wait-deep); }
+
+.search-btn:active { background: #b0741a; border-color: #b0741a; }
 
 .adv-toggle { font-size: 12px; color: var(--color-accent-300); cursor: pointer; background: none; border: none; padding: 0; margin-top: var(--space-4); text-decoration: none; }
 .adv-toggle:hover { color: var(--color-accent-200); }
@@ -434,7 +439,8 @@ button, input, select, textarea { font-family: inherit; }
 .label-panel label { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: block; }
 .label-panel input[type="date"] { padding: 6px 10px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); font-size: 13px; background: var(--color-bg); color: var(--color-text); color-scheme: dark; }
 .label-panel .mini-btn { padding: 6px 12px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: transparent; color: var(--color-text); font-size: 12px; cursor: pointer; white-space: nowrap; }
-.label-panel .mini-btn:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.label-panel .mini-btn:hover { background: color-mix(in srgb, var(--color-wait) 16%, transparent);
+  border-color: var(--color-wait); }
 .label-panel .uitleg { font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 7px; }
 .form-group.is-hand select, .form-group.is-hand input { border-style: dashed; }
 
@@ -605,9 +611,24 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 16px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; line-height: 1.2; cursor: pointer; color: var(--color-text); background: transparent; border: 1px solid var(--color-divider); transition: background .15s; text-decoration: none; }
 .btn:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
 .btn:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
-.btn-cta { color: var(--color-accent); border-color: var(--color-accent); font-size: 14px; padding: 10px 20px; }
-.btn-cta:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
-.btn-cta:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
+.btn-cta { color: var(--color-wait-ink); background: var(--color-wait);
+  border-color: var(--color-wait-deep); font-size: 14px; padding: 10px 20px; font-weight: 600; }
+
+.btn-cta:hover { background: var(--color-wait-deep); border-color: var(--color-wait-deep); }
+
+.btn-cta:active { background: #b0741a; border-color: #b0741a; }
+
+.btn-cta:focus-visible { outline: 2px solid var(--color-wait);
+  outline-offset: 2px; }
+
+/* Secundaire acties: oranje omlijning, gevulde achtergrond bij hover */
+.btn-oranje { color: var(--color-wait); background: transparent;
+  border-color: var(--color-wait); font-weight: 600; }
+
+.btn-oranje:hover { background: var(--color-wait); color: var(--color-wait-ink);
+  border-color: var(--color-wait-deep); }
+
+.btn-oranje:active { background: var(--color-wait-deep); color: var(--color-wait-ink); }
 .btn-outline { color: var(--color-text); border-color: var(--color-divider); }
 .actions-row { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-8); }
 .actions-center { justify-content: flex-start; }
@@ -617,7 +638,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius
 .verdiep-titel { font-size: 11px; color: var(--muted); margin-bottom: var(--space-3); letter-spacing: 0.08em; text-transform: uppercase; }
 .verdiep-rij { display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-start; }
 .verdiep-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; background: transparent; border: 1px solid var(--color-divider); color: var(--color-text); border-radius: var(--radius-md); padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: 400; transition: background .15s, border-color .15s; }
-.verdiep-btn:hover { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.verdiep-btn:hover { border-color: var(--color-wait); background: color-mix(in srgb, var(--color-wait) 14%, transparent); }
 .verdiep-btn .vb-score { font-size: 16px; font-weight: 500; color: var(--color-accent-300); }
 @media (max-width: 600px) { .verdiep-btn { flex: 1 1 calc(33% - 7px); padding: 8px 10px; font-size: 11px; } }
 
@@ -2343,31 +2364,68 @@ async function getWoningtypeBAG(lat, lon, bagId) {
     if (!feats.length) return null;
 
     // Dichtstbijzijnde pand = het eigen pand
-    let eigen = null, eigenD = Infinity, centroids = [];
+    // Let op: hier werd eerder een NIEUW object aan 'eigen' toegekend, terwijl
+    // in 'centroids' een ander object stond. De vergelijking x !== eigen sloot
+    // het eigen pand daardoor nooit uit, zodat elk pand zichzelf als buur telde.
+    // Een vrijstaande woning kwam er dan uit als twee-onder-een-kap, een
+    // twee-onder-een-kap als tussenwoning — systematisch één stap te dicht.
+    let eigen = null, eigenD = Infinity;
+    const centroids = [];
     feats.forEach(f => {
       const ring = haalRing(f.geometry);
       const c = ring ? ringCentroid(ring) : null;
       if (!c) return;
       const dist = haversine(lat, lon, c[0], c[1]);
-      centroids.push({ f, c, dist });
-      if (dist < eigenD) { eigenD = dist; eigen = { f, c, dist }; }
+      const item = { f, c, dist };
+      centroids.push(item);
+      if (dist < eigenD) { eigenD = dist; eigen = item; }
     });
     if (!eigen) return null;
 
-    // Aantal verblijfsobjecten binnen het eigen pand
+    // Aantal verblijfsobjecten binnen het eigen pand.
+    // Een WFS-filter op pandidentificatie werkt niet bij elke jaargang van de
+    // dienst. Daarom eerst een bbox-verzoek — hetzelfde patroon dat elders in
+    // deze tool betrouwbaar werkt — en het pand-id alleen als voorkeurscontrole.
+    // Ontbreekt dat veld, dan wordt geteld welke verblijfsobjecten geometrisch
+    // binnen de pandcontour vallen.
     let aantalVbo = null;
-    const pandId = eigen.f.properties?.identificatie;
-    if (pandId) {
-      try {
-        const fltr = '<Filter><PropertyIsEqualTo><PropertyName>pandidentificatie</PropertyName>'
-                   + '<Literal>' + pandId + '</Literal></PropertyIsEqualTo></Filter>';
-        const vUrl = 'https://service.pdok.nl/lv/bag/wfs/v2_0?service=WFS&version=2.0.0&request=GetFeature'
-                   + '&typeName=bag:verblijfsobject&outputFormat=application/json&count=200'
-                   + '&filter=' + encodeURIComponent(fltr);
-        const vData = await haalJSON(vUrl);
-        aantalVbo = (vData.features || []).length;
-      } catch(e) {}
-    }
+    let vboBron = null;
+    const pandId = eigen.f.properties?.identificatie
+                || eigen.f.properties?.pandidentificatie
+                || eigen.f.properties?.pand_id || null;
+    try {
+      const dv = 0.0004;   // ca. 45 m rond het adrespunt
+      const vUrl = 'https://service.pdok.nl/lv/bag/wfs/v2_0?service=WFS&version=2.0.0&request=GetFeature'
+        + '&typeName=bag:verblijfsobject&outputFormat=application/json&srsName=EPSG:4326&count=250'
+        + '&bbox=' + (lon-dv) + ',' + (lat-dv) + ',' + (lon+dv) + ',' + (lat+dv) + ',EPSG:4326';
+      const vData = await haalJSON(vUrl);
+      const vbos = vData.features || [];
+      if (vbos.length) {
+        const metPandId = vbos.filter(f => {
+          const p = f.properties || {};
+          const ref = p.pandidentificatie || p.pandidentificaties || p.pand_id;
+          const lijst = Array.isArray(ref) ? ref.map(String) : (ref ? [String(ref)] : []);
+          return pandId && lijst.includes(String(pandId));
+        });
+        if (metPandId.length) {
+          aantalVbo = metPandId.length;
+          vboBron = 'pandidentificatie';
+        } else {
+          // Geen bruikbaar pand-id: tel de objecten die binnen de contour liggen
+          const binnen = vbos.filter(f => {
+            const g = f.geometry;
+            if (!g) return false;
+            const pt = g.type === 'Point' ? g.coordinates : null;
+            if (!pt) return false;
+            return puntInGeometrie(pt[1], pt[0], eigen.f.geometry);
+          });
+          if (binnen.length) {
+            aantalVbo = binnen.length;
+            vboBron = 'geometrisch binnen de pandcontour';
+          }
+        }
+      }
+    } catch(e) { /* zonder aantal wordt op aangrenzende panden teruggevallen */ }
 
     // Aangrenzende panden: centroïden binnen 18 m van het eigen pand
     const buren = centroids.filter(x => x !== eigen && haversine(eigen.c[0], eigen.c[1], x.c[0], x.c[1]) < 18).length;
@@ -2387,8 +2445,11 @@ async function getWoningtypeBAG(lat, lon, bagId) {
       uitleg = 'Geen aangrenzende panden binnen 18 meter — waarschijnlijk vrijstaand.';
     }
     if (!type) return null;
-    return { type, aantalVbo, buren, uitleg, oppervlakte: eigen.f.properties?.oppervlakte || null, bouwjaarPand: eigen.f.properties?.bouwjaar || null };
-  } catch(e) { return null; }
+    return { type, aantalVbo, vboBron, buren, uitleg, panden: feats.length,
+      oppervlakte: eigen.f.properties?.oppervlakte || null,
+      bouwjaarPand: eigen.f.properties?.bouwjaar || null,
+      afstandPand: Math.round(eigen.dist) };
+  } catch(e) { return { fout: e.message || 'onbekende fout' }; }
 }
 
 // ══════════════════════════════════════════════════
@@ -2476,22 +2537,54 @@ function cbsWaarde(props, veld) {
   return null;
 }
 
+const CBS_WFS = laag => 'https://service.pdok.nl/cbs/wijkenbuurten/JAAR/wfs/v1_0'
+  + '?service=WFS&version=2.0.0&request=GetFeature'
+  + '&typeName=wijkenbuurten:' + laag + '&outputFormat=application/json&srsName=EPSG:4326';
+
+// Zet een WFS-antwoord om in onze veldnamen. De laag wordt niet meer verworpen
+// zodra de kerncijfers ontbreken: sommige jaargangen leveren voor wijk en
+// gemeente alleen naam, code en geometrie. Eerder verdween daarmee ook de naam
+// en bleven die kolommen leeg zonder uitleg. Nu blijft de laag bestaan met
+// statistieken:false, zodat de weergave kan melden waarom er niets staat.
+function cbsLees(p, jaar, laag) {
+  if (!p) return null;
+  const uit = { jaar, laag };
+  Object.keys(CBS_VELDEN).forEach(v => { uit[v] = cbsWaarde(p, v); });
+  const heeftNaam = !!(uit.buurtnaam || uit.wijknaam || uit.gemeentenaam
+                    || uit.buurtcode || uit.wijkcode || uit.gemeentecode);
+  uit.statistieken = !(uit.inwoners === null && uit.woningen === null);
+  return heeftNaam || uit.statistieken ? uit : null;
+}
+
 async function getCBSLaag(laag, lat, lon, jaar) {
   const d = 0.0002;
   try {
-    const url = 'https://service.pdok.nl/cbs/wijkenbuurten/' + jaar + '/wfs/v1_0'
-      + '?service=WFS&version=2.0.0&request=GetFeature'
-      + '&typeName=wijkenbuurten:' + laag + '&outputFormat=application/json'
-      + '&srsName=EPSG:4326&count=1'
+    const url = CBS_WFS(laag).replace('JAAR', jaar) + '&count=1'
       + '&bbox=' + (lat-d) + ',' + (lon-d) + ',' + (lat+d) + ',' + (lon+d) + ',urn:ogc:def:crs:EPSG::4326';
     const data = await haalJSON(url);
-    const p = data.features?.[0]?.properties;
-    if (!p) return null;
-    const uit = { jaar, laag };
-    Object.keys(CBS_VELDEN).forEach(v => { uit[v] = cbsWaarde(p, v); });
-    if (uit.inwoners === null && uit.woningen === null) return null;
-    return uit;
+    return cbsLees(data.features?.[0]?.properties, jaar, laag);
   } catch(e) { return null; }
+}
+
+// Ophalen op gebiedscode. Dat is betrouwbaarder dan een bbox rond het
+// adrespunt: de code kennen we al uit de buurt, en een wijk- of gemeentevlak
+// hoeft dat punt niet te overlappen in de gepubliceerde generalisatie.
+async function getCBSLaagOpCode(laag, code, jaar) {
+  if (!code) return null;
+  const velden = laag === 'wijken' ? ['wijkcode', 'wk_code', 'code']
+                                   : ['gemeentecode', 'gm_code', 'code'];
+  for (const veld of velden) {
+    try {
+      const filter = '<Filter><PropertyIsEqualTo><PropertyName>' + veld + '</PropertyName>'
+                   + '<Literal>' + code + '</Literal></PropertyIsEqualTo></Filter>';
+      const url = CBS_WFS(laag).replace('JAAR', jaar) + '&count=1'
+                + '&filter=' + encodeURIComponent(filter);
+      const data = await haalJSON(url);
+      const r = cbsLees(data.features?.[0]?.properties, jaar, laag);
+      if (r) { r.viaCode = veld; return r; }
+    } catch(e) { /* volgende veldnaam */ }
+  }
+  return null;
 }
 
 async function getCBSBuurt(lat, lon) {
@@ -2499,15 +2592,27 @@ async function getCBSBuurt(lat, lon) {
   for (const jaar of ['2024', '2023', '2022']) {
     const buurt = await getCBSLaag('buurten', lat, lon, jaar);
     if (!buurt) continue;
-    // Wijk en gemeente erbij voor de vergelijking; mislukken die, dan blijft
-    // de buurtweergave gewoon werken.
+
+    // Eerst op code, want die kennen we uit de buurt; anders op bbox
     const [wijk, gemeente] = await Promise.all([
-      getCBSLaag('wijken', lat, lon, jaar),
-      getCBSLaag('gemeenten', lat, lon, jaar),
+      getCBSLaagOpCode('wijken', buurt.wijkcode, jaar)
+        .then(r => r || getCBSLaag('wijken', lat, lon, jaar)),
+      getCBSLaagOpCode('gemeenten', buurt.gemeentecode, jaar)
+        .then(r => r || getCBSLaag('gemeenten', lat, lon, jaar)),
     ]);
     buurt.wijk = wijk;
     buurt.gemeente = gemeente;
     return buurt;
+  }
+  return null;
+}
+
+// Korte uitleg waarom een kolom leeg blijft. Een leeg vak zonder reden laat de
+// gebruiker gissen of het cijfer nul is, ontbreekt, of niet is opgehaald.
+function regioLeegReden(bron, soort) {
+  if (!bron) return 'de ' + soort + 'gegevens konden niet worden opgehaald';
+  if (bron.statistieken === false) {
+    return 'deze CBS-jaargang levert voor ' + soort + 'niveau alleen naam en code, geen kerncijfers';
   }
   return null;
 }
@@ -2634,6 +2739,12 @@ function inkomenHTML() {
       <tbody>${rijen}</tbody>
     </table></div>
 
+    ${(() => {
+      const redenen = [regioLeegReden(c.wijk, 'wijk'), regioLeegReden(c.gemeente, 'gemeente')].filter(Boolean);
+      return redenen.length ? `<p style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">
+        De kolom${redenen.length > 1 ? 'men' : ''} met een streepje staat leeg omdat ${escHtml(redenen.join(', en '))}.</p>` : '';
+    })()}
+
     <div class="alert alert-info" style="margin-top:12px">
       <span class="alert-icon">ℹ️</span>
       <div><strong>Hoe u deze cijfers moet lezen — en hoe niet.</strong>
@@ -2663,10 +2774,16 @@ function inkomenHTML() {
 // dashboards in plaats van een leeg blok.
 let _misdrijven = null;
 
-const MISDRIJF_TABELLEN = ['47013NED', '83648NED', '84721NED'];
+// 47018NED = jaarcijfers per wijk en buurt, 47022NED = maandcijfers.
+// Beide staan in de catalogus Politie op dataderden.cbs.nl.
+const MISDRIJF_TABELLEN = ['47018NED', '47022NED', '47013NED'];
 const CBS_ODATA_HOSTS = [
   'https://opendata.cbs.nl/ODataApi/odata/',
   'https://datasets.cbs.nl/odata/v1/CBS/',
+  // Tabellen van derden, waaronder de politiecijfers, staan in een eigen
+  // catalogus op een eigen host. Zonder deze regel bleef de misdrijventabel
+  // onbereikbaar, hoeveel tabelnummers we ook probeerden.
+  'https://dataderden.cbs.nl/ODataApi/OData/',
 ];
 
 function pakVeld(obj, ...namen) {
@@ -2882,7 +2999,10 @@ const STATLINE = {
   },
   energie: {
     titel: 'Energieverbruik woningen',
-    tabellen: ['81528NED', '84314NED'],
+    // 85999NED is de actuele tabel met verbruik per woningtype per buurt.
+    // Let op: de Kerncijfers wijken en buurten bevatten vanaf jaargang 2024
+    // geen verbruik per woningtype meer; deze tabel vult dat gat.
+    tabellen: ['85999NED', '81528NED', '84314NED'],
     niveau: 'buurt',
     velden: {
       gas:          ['GemiddeldAardgasverbruikTotaal', 'GemiddeldAardgasverbruik'],
@@ -2908,7 +3028,9 @@ const STATLINE = {
   },
   bodem: {
     titel: 'Bodemgebruik',
-    tabellen: ['70262NED', '37105'],
+    // Standopnametabellen per peiljaar: 86211NED (2022), 86210NED (2020).
+    // Deze worden niet herzien, maar per peiljaar opnieuw gepubliceerd.
+    tabellen: ['86211NED', '86210NED', '70262NED'],
     niveau: 'buurt',
     velden: {
       totaal:       ['TotaleOppervlakte'],
@@ -2922,7 +3044,9 @@ const STATLINE = {
   },
   zon: {
     titel: 'Zonnestroom bij woningen',
-    tabellen: ['85005NED', '84518NED'],
+    // 86044NED geeft vermogen per wijk en buurt. 85005NED gaat niet lager dan
+    // gemeenteniveau en leverde daarom nooit een buurtwaarde.
+    tabellen: ['86044NED', '85005NED'],
     niveau: 'buurt',
     velden: {
       vermogen:     ['OpgesteldVermogenZonnepanelen', 'OpgesteldVermogen'],
@@ -2941,20 +3065,6 @@ const STATLINE = {
       pctHoogInkomen:      ['HuishoudensMetHoogsteInkomen', 'PercentageHuishoudensMetHoogInkomen'],
       pctSociaalMinimum:   ['HuishoudensOnderOfRondSociaalMinimum', 'HuishoudensMetEenLaagInkomen'],
       pctUitkering:        ['PersonenPerSoortUitkeringBijstand', 'PercentagePersonenMetUitkering'],
-    },
-  },
-  prognose: {
-    titel: 'Regionale bevolkingsprognose',
-    // Alleen regionale prognosetabellen. 84528NED is een landelijke tabel en
-    // stond hier eerder onbedoeld in; die leverde het cijfer voor heel
-    // Nederland onder het kopje 'gemeente'.
-    tabellen: ['85089NED', '84526NED', '85496NED'],
-    niveau: 'gemeente',
-    velden: {
-      inwoners:     ['TotaleBevolking', 'Bevolking'],
-      pct65plus:    ['k_65JaarOfOuder', 'Personen65JaarOfOuder', 'k_65JaarOfOuderRelatief'],
-      pct80plus:    ['k_80JaarOfOuder', 'Personen80JaarOfOuder'],
-      huishoudens:  ['TotaalParticuliereHuishoudens', 'ParticuliereHuishoudens'],
     },
   },
 };
@@ -3197,24 +3307,34 @@ function bodemZonHTML() {
 }
 
 function prognoseHTML() {
-  const p = _sl.prognose;
-  if (!p || (p.pct65plus === null && p.inwoners === null)) return '';
+  // Geen prognoseblok meer. CBS en PBL hebben de detailcijfers van de
+  // regionale bevolkingsprognose van StatLine verwijderd omdat die
+  // onvoldoende betrouwbaar bleken, en adviseren ze niet te gebruiken. Alleen
+  // het totaal aantal inwoners is nog beschikbaar, en uitsluitend voor
+  // gemeenten vanaf 50.000 inwoners. Een vergrijzingscijfer per gemeente
+  // bestaat dus niet meer. Een eigen schatting maken zou hier precies het
+  // verkeerde zijn: de producent zegt zelf dat het niet kan.
+  if (!_cbs || _cbs.pct65plus === null) return '';
   return `
   <div class="result-section">
-    <h3>Bevolkingsprognose gemeente (CBS)</h3>
-    <div class="fund-grid" style="margin-bottom:10px">
-      ${p.inwoners !== null ? `<div class="fund-stat"><div class="lbl">Verwachte inwoners${p.periode ? ' ' + escHtml(p.periode) : ''}</div><div class="val">${cbsGetal(p.inwoners)}</div></div>` : ''}
-      ${p.pct65plus !== null ? `<div class="fund-stat"><div class="lbl">65 jaar en ouder</div><div class="val">${cbsGetal(p.pct65plus)}</div></div>` : ''}
-      ${p.pct80plus !== null ? `<div class="fund-stat"><div class="lbl">80 jaar en ouder</div><div class="val">${cbsGetal(p.pct80plus)}</div></div>` : ''}
-      ${p.huishoudens !== null ? `<div class="fund-stat"><div class="lbl">Particuliere huishoudens</div><div class="val">${cbsGetal(p.huishoudens)}</div></div>` : ''}
-    </div>
+    <h3>Vergrijzing in de buurt</h3>
+    <p style="font-size:13px;color:var(--color-neutral-400);margin-bottom:8px">
+      Nu: <strong>${cbsGetal(_cbs.pct65plus, 0)}%</strong> van de inwoners is 65 jaar of ouder${
+      _cbs.gemeente && _cbs.gemeente.pct65plus !== null
+        ? `, tegen ${cbsGetal(_cbs.gemeente.pct65plus, 0)}% in de gemeente` : ''}.
+    </p>
     <p style="font-size:11px;color:var(--color-neutral-400)">
-      Een prognose is een berekening op basis van huidige trends, geen voorspelling. Vergrijzing in de gemeente
-      zegt iets over de toekomstige vraag naar gelijkvloerse en levensloopbestendige woningen, maar regionale
-      prognoses wijken op buurtniveau vaak af.
+      Een prognose van de vergrijzing per gemeente ontbreekt bewust. CBS en PBL hebben de detailcijfers
+      van de regionale bevolkingsprognose van StatLine verwijderd omdat die onvoldoende betrouwbaar
+      bleken, en adviseren uitdrukkelijk ze niet te gebruiken. Alleen het totaal aantal inwoners is nog
+      beschikbaar, en uitsluitend voor gemeenten vanaf 50.000 inwoners. Het hier weergegeven cijfer is
+      de huidige situatie, geen vooruitzicht.
+      Landelijke prognoses staan in
+      <a href="https://www.cbs.nl/nl-nl/cijfers/detail/86244NED" target="_blank" rel="noopener">tabel 86244NED</a>.
     </p>
   </div>`;
 }
+
 
 function statlineStatusHTML() {
   const namen = Object.keys(STATLINE);
@@ -3285,12 +3405,16 @@ function regioDuiding(buurt, gemeente) {
 
 function regiometerHTML() {
   const c = _cbs;
-  if (!c || (!c.wijk && !c.gemeente)) return '';
+  if (!c) return '';
+  // Ook zonder wijk- of gemeentecijfers heeft de tabel waarde: de buurtkolom
+  // staat er dan met een verklaring waarom de andere twee leeg zijn.
+  const heeftVergelijking = (c.wijk && c.wijk.statistieken) || (c.gemeente && c.gemeente.statistieken);
   const rijen = REGIO_INDICATOREN.map(ind => {
     const b = regioWaarde(c, ind.veld);
     const w = regioWaarde(c.wijk, ind.veld);
     const g = regioWaarde(c.gemeente, ind.veld);
     if (b === null && w === null && g === null) return '';
+    if (!heeftVergelijking && b === null) return '';
     const d = regioDuiding(b, g);
     // De balk schaalt op de hoogste van de drie, of op 100 bij percentages
     const top = ind.max || Math.max(b || 0, w || 0, g || 0) || 1;
@@ -3322,6 +3446,14 @@ function regiometerHTML() {
       </tr></thead>
       <tbody>${rijen}</tbody>
     </table></div>
+    ${(() => {
+      const redenen = [regioLeegReden(c.wijk, 'wijk'), regioLeegReden(c.gemeente, 'gemeente')].filter(Boolean);
+      return redenen.length ? `<div class="alert alert-info" style="margin-top:10px">
+        <span class="alert-icon">&#8505;&#65039;</span>
+        <div>De kolom${redenen.length > 1 ? 'men' : ''} met een streepje staat leeg omdat ${escHtml(redenen.join(', en '))}.
+        De buurtcijfers zijn wel volledig. Vergelijkingsmateriaal vindt u op
+        <a href="https://opendata.cbs.nl/statline" target="_blank" rel="noopener">StatLine</a>.</div></div>` : '';
+    })()}
     <p style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">
       Gebiedscodes: ${c.buurtcode ? 'buurt <strong>' + escHtml(String(c.buurtcode)) + '</strong>' : ''}${
       c.wijkcode ? ' · wijk <strong>' + escHtml(String(c.wijkcode)) + '</strong>' : ''}${
@@ -4612,17 +4744,102 @@ async function pdokLookup(adresStr) {
 // ══════════════════════════════════════════════════
 //  EP-ONLINE — ENERGIELABEL
 // ══════════════════════════════════════════════════
+// De EP-Online API is openbaar maar niet vrij: elk verzoek vereist een
+// abonnementssleutel die u gratis aanvraagt bij RVO. Zonder sleutel antwoordt
+// de dienst met 401 en kwam de tool stil op een schatting uit — het leek dan
+// alsof er geen label bestond. De uitkomst vermeldt nu welke van de drie
+// oorzaken het is: geen sleutel, geen label geregistreerd, of dienst onbereikbaar.
+//
+// Een sleutel in deze pagina is voor iedere bezoeker leesbaar. Gebruik hem
+// dus alleen op een besloten omgeving. Voor een publieke site is de
+// bulkexport in data/labels/ de juiste route; die heeft geen sleutel nodig.
+const EPO_API = {
+  sleutel: '',        // <— hier uw RVO-abonnementssleutel, of laat leeg
+  laatsteFout: null,  // 'geen-sleutel' | 'niet-gevonden' | 'onbereikbaar'
+};
+try {
+  const _k = new URLSearchParams(location.search).get('epokey');
+  if (_k) EPO_API.sleutel = _k;
+} catch(e) {}
+
+// Kleine API voor insluiting en controle: de sleutel kan ook vanuit de
+// omliggende pagina worden gezet, zodat hij niet in dit bestand hoeft.
+function epoSleutelInstellen(sleutel) { EPO_API.sleutel = String(sleutel || ''); }
+function epoStatus() {
+  return {
+    sleutelIngesteld: !!EPO_API.sleutel,
+    laatsteFout: EPO_API.laatsteFout,
+    bulkActief: !!LABEL_LOOKUP.actief,
+    bulkAanwezig: !!(LABEL_LOOKUP.meta && LABEL_LOOKUP.meta !== false),
+    peildatum: LABEL_LOOKUP.peildatum || null,
+  };
+}
+
+function epoDeeplink(postcode, huisnummer) {
+  const pc = String(postcode || '').replace(/\s/g, '').toUpperCase();
+  return 'https://www.ep-online.nl/PandVoorbeeld/Zoeken'
+    + (pc ? '?postcode=' + encodeURIComponent(pc) + '&huisnummer=' + encodeURIComponent(String(huisnummer || '')) : '');
+}
+
 async function fetchEnergyLabel(postcode, huisnummer) {
+  EPO_API.laatsteFout = null;
+  const pc = (postcode || '').replace(/\s/g, '').toUpperCase();
+  const hn = String(huisnummer || '').replace(/\D/g, '');
+  if (!pc || !hn) return null;
+
+  if (!EPO_API.sleutel) {
+    EPO_API.laatsteFout = 'geen-sleutel';
+    return null;
+  }
+
+  const url = 'https://public.ep-online.nl/api/v5/PandEnergielabel/Adres'
+    + '?postcode=' + pc + '&huisnummer=' + hn;
   try {
-    const pc = (postcode || '').replace(/\s/g, '').toUpperCase();
-    const hn = String(huisnummer || '').replace(/\D/g, '');
-    if (!pc || !hn) return null;
-    const url = 'https://public.ep-online.nl/api/v3/PandEnergielabel/Adres?postcode=' + pc + '&huisnummer=' + hn;
-    const data = await haalJSON(url);
+    const r = await fetch(url, {
+      headers: { 'Authorization': EPO_API.sleutel, 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(9000),
+    });
+    if (r.status === 401 || r.status === 403) { EPO_API.laatsteFout = 'geen-sleutel'; return null; }
+    if (r.status === 404) { EPO_API.laatsteFout = 'niet-gevonden'; return null; }
+    if (!r.ok) { EPO_API.laatsteFout = 'onbereikbaar'; return null; }
+    const data = await r.json();
     const item = Array.isArray(data) ? data[0] : data;
-    if (!item) return null;
-    return item.energieklasse || item.energielabel || item.Energieklasse || null;
-  } catch(e) { return null; }
+    if (!item) { EPO_API.laatsteFout = 'niet-gevonden'; return null; }
+    const klasse = item.labelLetter || item.energieklasse || item.energielabel || item.Energieklasse || null;
+    if (!klasse) { EPO_API.laatsteFout = 'niet-gevonden'; return null; }
+    return klasse;
+  } catch(e) {
+    EPO_API.laatsteFout = 'onbereikbaar';
+    return null;
+  }
+}
+
+// Waarom is er geen geregistreerd label? Dat verschil is wezenlijk: een woning
+// zonder label is iets anders dan een woning waarvan wij het label niet konden
+// ophalen.
+function labelFaalReden(postcode, huisnummer) {
+  const link = epoDeeplink(postcode, huisnummer);
+  // meta.json is alleen geladen wanneer de bulkexport er daadwerkelijk staat
+  const bulkAanwezig = LABEL_LOOKUP.actief && LABEL_LOOKUP.meta && LABEL_LOOKUP.meta !== false;
+  if (bulkAanwezig) {
+    return { kort: 'niet in de bulkexport',
+      lang: 'Dit adres komt niet voor in de EP-Online bulkexport (peildatum '
+        + (LABEL_LOOKUP.peildatum || 'onbekend') + '). Mogelijk is er geen label afgegeven, '
+        + 'of is het afgegeven na die peildatum.', link };
+  }
+  if (EPO_API.laatsteFout === 'geen-sleutel') {
+    return { kort: 'geen API-sleutel ingesteld',
+      lang: 'De EP-Online API vereist een abonnementssleutel; die is hier niet ingesteld. '
+        + 'Er is dus niet vastgesteld of dit adres een geregistreerd label heeft. '
+        + 'Vraag een gratis sleutel aan bij RVO, of gebruik de bulkexport.', link };
+  }
+  if (EPO_API.laatsteFout === 'onbereikbaar') {
+    return { kort: 'EP-Online onbereikbaar',
+      lang: 'De EP-Online API gaf geen antwoord. Er is niet vastgesteld of dit adres '
+        + 'een geregistreerd label heeft.', link };
+  }
+  return { kort: 'geen geregistreerd label gevonden',
+    lang: 'EP-Online kent voor dit adres geen geregistreerd energielabel.', link };
 }
 
 function mapEnergyLabel(label) {
@@ -5592,13 +5809,12 @@ async function onAddressSelected(doc) {
         setField('energielabel', geschat, false);
         document.getElementById('sb-energielabel').style.display = 'inline';
         document.getElementById('note-energielabel').classList.add('show');
-        document.getElementById('note-energielabel').textContent =
-          LABEL_LOOKUP.actief
-            ? 'Dit adres komt niet voor in de EP-Online bulkexport (peildatum '
-              + (LABEL_LOOKUP.peildatum || 'onbekend') + ') en de EP-Online API gaf geen resultaat. '
-              + 'Dit is een schatting op basis van het bouwjaar, geen geregistreerd label.'
-            : 'Geen geregistreerd label gevonden op EP-Online; dit is een schatting op basis van het bouwjaar.';
-        _extra.label = { bron: 'schatting', klasse: geschat };
+        const reden = labelFaalReden(bag.postcode, bag.huisnummer);
+        document.getElementById('note-energielabel').innerHTML =
+          'Schatting op basis van het bouwjaar, geen geregistreerd label. Reden: '
+          + escHtml(reden.kort) + '. '
+          + '<a href="' + reden.link + '" target="_blank" rel="noopener">Zelf opzoeken op ep-online.nl ↗</a>';
+        _extra.label = { bron: 'schatting', klasse: geschat, reden };
       }
     }
     // ── Herkomst energielabel ──
@@ -5617,10 +5833,10 @@ async function onAddressSelected(doc) {
         'Geregistreerd definitief energielabel, live opgehaald uit de EP-Online API.');
       zetBronStatus('energielabel', 'auto');
     } else if (lb && lb.bron === 'schatting') {
+      const rd = lb.reden || labelFaalReden(bag.postcode, bag.huisnummer);
       registerBron('energielabel', 'Energielabel', 'model', 'schatting', elVal + ' (schatting)',
-        'GEEN geregistreerd label gevonden'
-        + (LABEL_LOOKUP.actief ? ' in de EP-Online bulkexport (peildatum ' + (LABEL_LOOKUP.peildatum || 'onbekend') + ') noch via de EP-Online API' : ' in EP-Online')
-        + '. Waarde is afgeleid van het bouwjaar en mag niet als energielabel worden gepresenteerd.');
+        rd.lang + ' De weergegeven waarde is afgeleid van het bouwjaar en mag niet als '
+        + 'energielabel worden gepresenteerd. Zelf controleren: ' + rd.link);
       zetBronStatus('energielabel', 'schatting');
     } else {
       zetBronStatus('energielabel', 'mislukt');
@@ -5707,13 +5923,26 @@ async function onAddressSelected(doc) {
         'CBS Kerncijfers wijken en buurten ' + cbs.jaar
         + (cbs.buurtcode ? ' (buurtcode ' + cbs.buurtcode + ')' : '')
         + '. Gemiddelden voor de hele buurt, niet voor deze woning.');
-      if (cbs.wijk || cbs.gemeente) {
-        registerBron('regio_cbs', 'Regiovergelijking wijk en gemeente', 'cbs', 'auto',
-          [cbs.wijk ? 'wijk ' + (cbs.wijk.wijknaam || cbs.wijkcode || '') : null,
-           cbs.gemeente ? 'gemeente ' + (cbs.gemeente.gemeentenaam || cbs.gemeentecode || '') : null]
-            .filter(Boolean).join(' · '),
-          'Dezelfde CBS-jaargang op wijk- en gemeenteniveau, gebruikt om de buurtcijfers in verhouding te plaatsen.');
-      }
+      // Wijk en gemeente apart vastleggen, met de reden bij een lege kolom
+      [['wijk', 'Wijkcijfers', cbs.wijk, cbs.wijkcode],
+       ['gemeente', 'Gemeentecijfers', cbs.gemeente, cbs.gemeentecode]].forEach(([soort, label, bron, code]) => {
+        if (bron && bron.statistieken) {
+          registerBron('regio_' + soort, label, 'cbs', 'auto',
+            (bron.wijknaam || bron.gemeentenaam || code || soort)
+            + (bron.inwoners !== null ? ' — ' + cbsGetal(bron.inwoners) + ' inwoners' : ''),
+            'Dezelfde CBS-jaargang op ' + soort + 'niveau, gebruikt om de buurtcijfers in verhouding te plaatsen.'
+            + (bron.viaCode ? ' Opgehaald op ' + bron.viaCode + '.' : ' Opgehaald op locatie.'));
+        } else if (bron) {
+          registerBron('regio_' + soort, label, 'cbs', 'mislukt',
+            (bron.wijknaam || bron.gemeentenaam || code || 'gevonden') + ' — zonder kerncijfers',
+            'Het gebied is gevonden, maar deze CBS-jaargang levert op ' + soort + 'niveau geen kerncijfers. '
+            + 'De vergelijkingskolom blijft daarom leeg.');
+        } else {
+          registerBron('regio_' + soort, label, 'cbs', 'mislukt', 'Niet opgehaald',
+            'Het ' + soort + 'vlak kon niet worden opgehaald'
+            + (code ? ' (code ' + code + ')' : ' (geen code bekend uit de buurtgegevens)') + '.');
+        }
+      });
       if (cbs.inkomenPerInwoner !== null || cbs.pctSociaalMinimum !== null) {
         registerBron('inkomen_buurt', 'Inkomen en bestaanszekerheid buurt', 'cbs', 'auto',
           cbs.inkomenPerInwoner !== null
@@ -5777,15 +6006,25 @@ async function onAddressSelected(doc) {
     }
 
     // Woningtype uit BAG-pandgeometrie
-    if (wtBag && !document.getElementById('woningtype').value) {
+    if (wtBag && wtBag.type && !document.getElementById('woningtype').value) {
       _woningtypeBag = wtBag;
       setField('woningtype', wtBag.type, true);
-      registerBron('woningtype', 'Woningtype', 'bag', 'schatting', wtBag.type, wtBag.uitleg + ' Afgeleid uit pandgeometrie en het aantal verblijfsobjecten; geen geregistreerd kenmerk.');
+      registerBron('woningtype', 'Woningtype', 'bag', 'schatting', wtBag.type,
+        wtBag.uitleg
+        + ' Gebaseerd op ' + wtBag.panden + ' panden in de omgeving'
+        + (wtBag.aantalVbo !== null ? ' en ' + wtBag.aantalVbo + ' verblijfsobject(en) in het pand ('
+            + wtBag.vboBron + ')' : ' (aantal verblijfsobjecten niet vast te stellen)')
+        + '. Afgeleid uit geometrie, geen geregistreerd kenmerk: de BAG kent geen veld voor woningtype.');
       zetBronStatus('woningtype', 'schatting');
     } else if (document.getElementById('woningtype').value) {
       zetBronStatus('woningtype', 'auto');
     } else {
       zetBronStatus('woningtype', 'mislukt');
+      registerBron('woningtype', 'Woningtype', 'bag', 'mislukt', 'Niet vastgesteld',
+        'De BAG kent geen veld voor woningtype; het wordt afgeleid uit de pandcontour en het '
+        + 'aantal verblijfsobjecten. Dat lukte hier niet'
+        + (wtBag && wtBag.fout ? ' (' + wtBag.fout + ')' : '')
+        + '. Kies het type zelf in het tabblad Woning; het weegt mee in de score.');
     }
 
     // Overstromingsdiepte
@@ -6486,10 +6725,10 @@ function renderResultaat() {
 
       <div class="actions-row actions-center" style="margin-top:20px">
         <button class="btn btn-cta" onclick="printRapport()">Rapport (print / PDF)</button>
-        <button class="btn" onclick="exporteerJSON()">Opslaan als JSON</button>
-        <button class="btn" onclick="document.getElementById('ladenFile').click()">Rapport laden</button>
-        <button class="btn" onclick="kopieerLink()">Deel link</button>
-        <button class="btn" onclick="switchTab('adres')">Aanpassen</button>
+        <button class="btn btn-oranje" onclick="exporteerJSON()">Opslaan als JSON</button>
+        <button class="btn btn-oranje" onclick="document.getElementById('ladenFile').click()">Rapport laden</button>
+        <button class="btn btn-oranje" onclick="kopieerLink()">Deel link</button>
+        <button class="btn btn-oranje" onclick="switchTab('adres')">Aanpassen</button>
       </div>
       <input type="file" id="ladenFile" class="file-in" accept="application/json"
              onchange="if(this.files[0]) importeerJSON(this.files[0], false); this.value='';">
