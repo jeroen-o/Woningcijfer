@@ -17,7 +17,7 @@ const tabelData = {
     AfstandTotSchoolHavoVwo_52:3.4, ScholenBinnen3KmBasisonderwijs_41:8.6,
     AfstandTotTreinstationsTotaal_60:2.4, AfstandTotOpritHoofdverkeersweg_58:1.9,
     AfstandTotBrandweerkazerne_62:2.2, AfstandTotBibliotheek_33:1.7 }],
-  '81528NED': [
+  '85999NED': [
     { RegioS:'BU03072801', Perioden:'2023JJ00', Woningkenmerken:'A028927', GemiddeldAardgasverbruikTotaal_1:1450 },
     { RegioS:'BU03072801', Perioden:'2023JJ00', Woningkenmerken:'T001139',
       GemiddeldAardgasverbruikTotaal_1:1180, GemiddeldElektriciteitsverbruikTotaal_9:3150,
@@ -28,16 +28,14 @@ const tabelData = {
   '83625NED': [{ RegioS:'GM0307', Perioden:'2024JJ00',
     GemiddeldeVerkoopprijs_2:452000, VerkochteWoningen_1:2140,
     PrijsindexBestaandeKoopwoningen_1:148.2, OntwikkelingTOVEenJaarEerder_3:7.4 }],
-  '70262NED': [{ RegioS:'BU03072801', Perioden:'2019JJ00',
+  '86211NED': [{ RegioS:'BU03072801', Perioden:'2019JJ00',
     TotaleOppervlakte_1:150, TotaalVerkeersterrein_2:12, TotaalBebouwdTerrein_8:96,
     TotaalRecreatieterrein_20:18, TotaalBosEnOpenNatuurlijkTerrein_30:15, TotaalBinnenwater_38:9 }],
-  '85005NED': [{ RegioS:'BU03072801', Perioden:'2023JJ00',
+  '86044NED': [{ RegioS:'BU03072801', Perioden:'2023JJ00',
     OpgesteldVermogenZonnepanelen_2:1240, AantalInstallaties_1:96, OpgesteldVermogenPerWoning_3:4080 }],
   '85064NED': [{ RegioS:'BU03072801', Perioden:'2022JJ00',
     GemiddeldInkomenPerInwoner_1:32.4, GemiddeldInkomenPerInkomensontvanger_2:41.8,
     HuishoudensMetLaagsteInkomen_3:14, HuishoudensOnderOfRondSociaalMinimum_5:4 }],
-  '85089NED': [{ RegioS:'GM0307', Perioden:'2035JJ00',
-    TotaleBevolking_1:172000, k_65JaarOfOuder_5:21.4, k_80JaarOfOuder_6:7.1 }],
 };
 
 const cbsBuurt = { features:[{ properties:{
@@ -88,10 +86,10 @@ setTimeout(async () => {
   };
 
   // ── Registratie ──
-  await test('Zeven onderwerpen geregistreerd', async () => {
+  await test('Zes onderwerpen geregistreerd', async () => {
     const alles = await w.haalAlleStatline('BU03072801', 'GM0307');
     const n = Object.keys(alles);
-    return n.length === 7 ? n.join(', ') : n.length;
+    return n.length === 6 ? n.join(', ') : n.length;
   });
 
   // ── Nabijheid ──
@@ -132,9 +130,10 @@ setTimeout(async () => {
     const v = await w.haalStatline('verkoop', 'BU03072801', 'GM0307');
     return v && v.gemiddeldePrijs === 452000 && v.ontwikkeling === 7.4 ? '€ 452.000, +7,4%' : JSON.stringify(v);
   });
-  await test('Prognose op gemeentecode', async () => {
+  await test('Prognose-onderwerp bestaat niet meer', async () => {
+    // CBS en PBL hebben de regionale prognose teruggetrokken
     const p = await w.haalStatline('prognose', 'BU03072801', 'GM0307');
-    return p && p.pct65plus === 21.4 ? '21,4% 65-plus in 2035' : JSON.stringify(p);
+    return p === null ? 'null — onderwerp verwijderd' : JSON.stringify(p);
   });
   await test('Zonder gemeentecode geen verzoek voor gemeentetabel', async () => {
     const v = await w.haalStatline('verkoop', 'BU03072801', null);
@@ -159,7 +158,7 @@ setTimeout(async () => {
     return n === null ? 'null want 84463NED leeg (correct)' : n.tabel;
   });
   await test('Volledige uitval van één onderwerp raakt de rest niet', async () => {
-    uitval = ['70262NED', '37105'];
+    uitval = ['86211NED', '86210NED', '70262NED'];
     const alles = await w.haalAlleStatline('BU03072801', 'GM0307');
     uitval = [];
     return alles.bodem === null && alles.energie && alles.nabijheid
@@ -170,7 +169,7 @@ setTimeout(async () => {
   await test('Alle onderwerpen parallel opgehaald', async () => {
     const alles = await w.haalAlleStatline('BU03072801', 'GM0307');
     const n = Object.values(alles).filter(Boolean).length;
-    return n === 7 ? '7 van 7' : n + ' van 7';
+    return n === 6 ? '6 van 6' : n + ' van 6';
   });
 
   // ── Weergave ──
@@ -193,8 +192,11 @@ setTimeout(async () => {
     // natuur 15 + recreatie 18 van 150 ha = 22%
     return h.includes('22%') ? 'groen 22%' : h.match(/>\d+%</g);
   });
-  await test('Prognoseblok noemt dat het een berekening is', () =>
-    w.prognoseHTML().includes('geen voorspelling'));
+  await test('Geen prognoseblok, met uitleg in de code', () => {
+    const bron = fs.readFileSync(INDEX, 'utf8');
+    return bron.includes('onvoldoende betrouwbaar') && bron.includes('adviseren')
+      ? 'reden vastgelegd bij prognoseHTML' : false;
+  });
 
   // ── Aanvullen van velden ──
   await test('Nabijheid vult lege voorzieningenvelden', async () => {
@@ -239,11 +241,11 @@ setTimeout(async () => {
 
   // ── Statusoverzicht ──
   await test('Statusblok verschijnt bij gedeeltelijke uitval', async () => {
-    uitval = ['85005NED', '84518NED'];
+    uitval = ['86044NED', '85005NED'];
     await w.haalAlleStatline('BU03072801', 'GM0307');
     uitval = [];
     const h = w.statlineStatusHTML();
-    return h.includes('Zonnestroom bij woningen') && h.includes('6 van de 7') ? '6 van 7 gemeld' : h.slice(0, 90);
+    return h.includes('Zonnestroom bij woningen') && h.includes('5 van de 6') ? '5 van 6 gemeld' : h.slice(0, 90);
   });
   await test('Statusblok blijft weg als alles lukt', async () => {
     await w.haalAlleStatline('BU03072801', 'GM0307');

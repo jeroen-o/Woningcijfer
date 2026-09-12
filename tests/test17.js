@@ -13,16 +13,18 @@ const BU = 'BU02670503';
 // De landelijke prognosetabel heeft geen gemeentekolom. Sommige diensten
 // negeren dan het filter en geven de hele tabel terug — precies de situatie
 // die het cijfer voor heel Nederland onder 'gemeente' zette.
+// Tabel zonder gebiedskolom: sommige diensten negeren dan het filter en
+// geven de hele tabel terug — precies wat het landelijke cijfer onder het
+// kopje 'gemeente' zette.
 const landelijk = { value: [
-  { ID: 0, Perioden: '2070JJ00', TotaleBevolking_1: 20599185 },
-  { ID: 1, Perioden: '2030JJ00', TotaleBevolking_1: 18300000 },
+  { ID: 0, Perioden: '2070JJ00', GemiddeldeVerkoopprijs_2: 20599185 },
+  { ID: 1, Perioden: '2030JJ00', GemiddeldeVerkoopprijs_2: 18300000 },
 ]};
 
 const regionaal = { value: [
-  { ID: 0, RegioS: 'GM0267', Perioden: '2035JJ00', TotaleBevolking_1: 47800,
-    k_65JaarOfOuder_5: 19.2, k_80JaarOfOuder_6: 6.1 },
-  { ID: 1, RegioS: 'GM0273', Perioden: '2035JJ00', TotaleBevolking_1: 62000 },
-  { ID: 2, RegioS: 'NL01',   Perioden: '2035JJ00', TotaleBevolking_1: 18800000 },
+  { ID: 0, RegioS: 'GM0267', Perioden: '2024JJ00', GemiddeldeVerkoopprijs_2: 452000 },
+  { ID: 1, RegioS: 'GM0273', Perioden: '2024JJ00', GemiddeldeVerkoopprijs_2: 62000 },
+  { ID: 2, RegioS: 'NL01',   Perioden: '2024JJ00', GemiddeldeVerkoopprijs_2: 18800000 },
 ]};
 
 // Tabel die het filter respecteert maar een buurgemeente teruggeeft
@@ -69,7 +71,7 @@ setTimeout(async () => {
   // ── Gebiedscontrole ──
   await test('Landelijke tabel zonder gemeentekolom wordt geweigerd', async () => {
     scenario = 'landelijk';
-    const r = await w.haalStatline('prognose', BU, GM);
+    const r = await w.haalStatline('verkoop', BU, GM);
     scenario = 'regionaal';
     return r === null ? 'null — geen 20.599.185 meer onder "gemeente"' : JSON.stringify(r).slice(0, 90);
   });
@@ -79,17 +81,20 @@ setTimeout(async () => {
     scenario = 'regionaal';
     return r === null ? 'GM0273 niet geaccepteerd voor GM0267' : JSON.stringify(r).slice(0, 90);
   });
+  await test('Prognose-onderwerp is verwijderd', () =>
+    !html.includes("titel: 'Regionale bevolkingsprognose'")
+      ? 'niet meer in het register' : 'staat er nog');
   await test('Juiste gemeente wordt wel gebruikt', async () => {
-    const r = await w.haalStatline('prognose', BU, GM);
-    return r && r.inwoners === 47800 ? '47.800 inwoners voor Nijkerk' : JSON.stringify(r).slice(0, 90);
+    const r = await w.haalStatline('verkoop', BU, GM);
+    return r && r.gemiddeldePrijs === 452000 ? '€ 452.000 voor Nijkerk' : JSON.stringify(r).slice(0, 90);
   });
   await test('Landelijke rij in een regionale tabel overgeslagen', async () => {
-    const r = await w.haalStatline('prognose', BU, GM);
-    return r.inwoners !== 18800000 ? 'NL01 genegeerd' : 'landelijk cijfer gebruikt';
+    const r = await w.haalStatline('verkoop', BU, GM);
+    return r && r.gemiddeldePrijs !== 18800000 ? 'NL01 genegeerd' : 'landelijk cijfer gebruikt';
   });
   await test('Buurgemeente in dezelfde tabel overgeslagen', async () => {
-    const r = await w.haalStatline('prognose', BU, GM);
-    return r.inwoners !== 62000 ? 'GM0273 genegeerd' : 'buurgemeente gebruikt';
+    const r = await w.haalStatline('verkoop', BU, GM);
+    return r && r.gemiddeldePrijs !== 62000 ? 'GM0273 genegeerd' : 'buurgemeente gebruikt';
   });
 
   await test('Gebiedskolom herkend ongeacht de naam', () => {
@@ -103,8 +108,9 @@ setTimeout(async () => {
   await test('Spatiepadding in de code opgevangen', () =>
     w.rijHoortBijGebied({ RegioS: 'GM0267  ' }, 'GM0267') === true);
 
-  await test('Landelijke prognosetabel uit het register verwijderd', () =>
-    !html.includes("'84528NED'") ? '84528NED niet meer als kandidaat' : '84528NED staat er nog');
+  await test('Landelijke prognosetabellen niet meer in gebruik', () =>
+    !html.includes("'84528NED'") && !html.includes("'85089NED'")
+      ? 'geen prognosetabellen meer' : 'staan er nog');
 
   // ── Leesbaarheid van de tabel ──
   await test('Geen witte rijachtergrond meer in de template', () =>
