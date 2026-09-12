@@ -1,51 +1,77 @@
 name: Energielabels bouwen
+
+# Zet de EP-Online bulkexport om naar gesharde JSON. Handmatig te starten,
+# omdat het bronbestand circa 1,6 GB is en niet in de repository thuishoort.
+#
+# LET OP: lees docs/compliance.md voordat u de uitkomst publiek host. Het
+# publiceren van de volledige dataset is een andere handeling dan het
+# opzoeken van één adres.
 on:
   workflow_dispatch:
     inputs:
-      csv_url:
-        description: 'Directe download-URL van de EP-Online bulkexport CSV (~1,6 GB). Token in de URL meegeven indien nodig.'
+      bron_url:
+        description: 'URL van de EP-Online CSV (bijv. een pre-signed link)'
         required: true
-      peildatum:
-        description: 'Peildatum YYYY-MM-DD (leeg = uit bestandsnaam afleiden)'
+        type: string
+      publiceren:
+        description: 'Resultaat committen naar data/labels/'
         required: false
+        type: boolean
+        default: false
+
 permissions:
   contents: write
-  actions: write
+
 jobs:
-  labels:
+  bouwen:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Bulkexport downloaden
-        env:
-          CSV_URL: ${{ github.event.inputs.csv_url }}
+
+      - name: Schijfruimte vrijmaken
         run: |
-          curl -fSL "$CSV_URL" -o export.csv
-          ls -lh export.csv
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
+          df -h /
+
+      - name: Bronbestand ophalen
+        run: |
+          curl -fsSL "${{ inputs.bron_url }}" -o /tmp/epo.csv
+          ls -lh /tmp/epo.csv
+
+      - name: Kolomherkenning controleren
+        run: python3 scripts/epo_shard.py /tmp/epo.csv --toon-header
+
       - name: Shards bouwen
-        env:
-          PEIL: ${{ github.event.inputs.peildatum }}
         run: |
-          if [ -n "$PEIL" ]; then
-            python3 scripts/epo_shard.py export.csv --uit data/labels --peildatum "$PEIL"
-          else
-            python3 scripts/epo_shard.py export.csv --uit data/labels
-          fi
-          rm -f export.csv
-      - name: Vastleggen en publiceren
-        env:
-          GH_TOKEN: ${{ github.token }}
+          python3 scripts/epo_shard.py /tmp/epo.csv --uit data/labels 2>&1 | tee /tmp/labels.log
+          du -sh data/labels
+          ls data/labels | wc -l
+
+      - name: Samenvatting
+        if: always()
         run: |
-          if [ -z "$(git status --porcelain data/labels)" ]; then
-            echo "Geen wijzigingen in data/labels."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/labels
-          git commit -m "Energielabels verversen"
+          {
+            echo '## Energielabels'
+            echo '```'
+            tail -30 /tmp/labels.log 2>/dev/null || echo 'geen logbestand'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Bronbestand verwijderen
+        if: always()
+        run: rm -f /tmp/epo.csv
+
+      - name: Committen
+        if: inputs.publiceren
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -f data/labels
+          git commit -m "data: energielabels verversen (peildatum uit meta.json)" || echo 'niets gewijzigd'
           git push
-          gh workflow run pages.yml --ref main

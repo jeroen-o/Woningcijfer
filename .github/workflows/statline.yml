@@ -1,34 +1,80 @@
-name: StatLine verversen
+name: CBS-cijfers verversen
+
+# Haalt de StatLine-tabellen maandelijks op en zet ze als momentopname in
+# data/cbs/. Daarmee verdwijnen twee risico's uit de browser: CBS hernummert
+# tabellen, en of hun OData CORS toestaat is niet gegarandeerd.
+#
+# Gaat er iets mis, dan faalt deze workflow en niet het rapport van een
+# gebruiker. Bij wijzigingen komt er een pull request, zodat u ziet wat er
+# verandert voordat het live gaat.
 on:
   schedule:
-    - cron: '0 4 1 * *'
+    - cron: '0 4 3 * *'      # de 3e van de maand, 04:00 UTC
   workflow_dispatch:
+    inputs:
+      onderwerp:
+        description: 'Eén onderwerp (leeg = alle)'
+        required: false
+        type: string
+      strict:
+        description: 'Falen zodra een onderwerp niet lukt'
+        required: false
+        type: boolean
+        default: false
+
 permissions:
   contents: write
-  actions: write
+  pull-requests: write
+
 jobs:
   verversen:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: CBS-tabellen ophalen
-        run: python3 scripts/fetch_statline.py --uit data/cbs
-      - name: Wijzigingen vastleggen en publiceren
-        env:
-          GH_TOKEN: ${{ github.token }}
+
+      - name: Tabellen ophalen
+        id: ophalen
         run: |
-          if [ -z "$(git status --porcelain data/cbs)" ]; then
-            echo "Geen wijzigingen in data/cbs."
-            exit 0
+          args="--uit data/cbs"
+          if [ -n "${{ inputs.onderwerp }}" ]; then
+            args="$args --onderwerp ${{ inputs.onderwerp }}"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/cbs
-          git commit -m "StatLine-momentopname verversen"
-          git push
-          gh workflow run pages.yml --ref main
-      - name: Falen als een onderwerp ontbreekt
-        run: python3 -c "import json,sys; m=json.load(open('data/cbs/manifest.json')); sys.exit(1 if m.get('mislukt') else 0)"
+          if [ "${{ inputs.strict }}" = "true" ]; then
+            args="$args --strict"
+          fi
+          python3 scripts/fetch_statline.py $args 2>&1 | tee /tmp/statline.log
+          echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Samenvatting
+        if: always()
+        run: python3 scripts/statline_summary.py >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Pull request openen bij wijzigingen
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: data/statline-update
+          delete-branch: true
+          title: 'CBS-cijfers verversen'
+          commit-message: 'data: CBS StatLine-momentopname verversen'
+          add-paths: data/cbs
+          body: |
+            Automatische verversing van de CBS StatLine-momentopname.
+
+            Controleer in de samenvatting van de workflow welke tabellen zijn
+            gebruikt en of er velden zijn weggevallen. Een weggevallen veld
+            betekent dat CBS de kolomnaam heeft gewijzigd; vul dan een nieuwe
+            variant aan in `scripts/fetch_statline.py`.
+
+            Deze wijziging raakt alleen `data/cbs/`. De modelversie in
+            `index.html` verandert niet, want de rekenregels blijven gelijk.
+          labels: data
+
+      - name: Falen doorgeven
+        if: steps.ophalen.outputs.code != '0'
+        run: |
+          echo "::error::fetch_statline.py eindigde met code ${{ steps.ophalen.outputs.code }}"
+          exit 1
