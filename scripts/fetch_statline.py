@@ -49,6 +49,9 @@ import urllib.request
 HOSTS = [
     'https://opendata.cbs.nl/ODataApi/odata/',
     'https://datasets.cbs.nl/odata/v1/CBS/',
+    # Tabellen van derden (o.a. de politiecijfers) staan in een eigen
+    # catalogus op een eigen host.
+    'https://dataderden.cbs.nl/ODataApi/OData/',
 ]
 
 # Deze definities moeten gelijk blijven aan het STATLINE-register in de tool.
@@ -89,7 +92,7 @@ ONDERWERPEN = {
     },
     'energie': {
         'titel': 'Energieverbruik woningen',
-        'tabellen': ['81528NED', '84314NED'],
+        'tabellen': ['85999NED', '81528NED', '84314NED'],
         'niveau': 'buurt',
         'velden': {
             'gas': ['GemiddeldAardgasverbruikTotaal', 'GemiddeldAardgasverbruik'],
@@ -117,7 +120,7 @@ ONDERWERPEN = {
     },
     'bodem': {
         'titel': 'Bodemgebruik',
-        'tabellen': ['70262NED'],
+        'tabellen': ['86211NED', '86210NED', '70262NED'],
         'niveau': 'buurt',
         'velden': {
             'totaal': ['TotaleOppervlakte'],
@@ -132,7 +135,7 @@ ONDERWERPEN = {
     },
     'zon': {
         'titel': 'Zonnestroom bij woningen',
-        'tabellen': ['85005NED', '84518NED'],
+        'tabellen': ['86044NED', '85005NED'],
         'niveau': 'buurt',
         'velden': {
             'vermogen': ['OpgesteldVermogenZonnepanelen', 'OpgesteldVermogen'],
@@ -155,23 +158,15 @@ ONDERWERPEN = {
         },
         'verplicht': [],
     },
-    'prognose': {
-        'titel': 'Regionale bevolkingsprognose',
-        # Alleen regionale tabellen; 84528NED is landelijk en gaf het cijfer
-        # voor heel Nederland onder het kopje 'gemeente'.
-        'tabellen': ['85089NED', '84526NED', '85496NED'],
-        'niveau': 'gemeente',
-        'velden': {
-            'inwoners': ['TotaleBevolking', 'Bevolking'],
-            'pct65plus': ['k_65JaarOfOuder', 'Personen65JaarOfOuder'],
-            'pct80plus': ['k_80JaarOfOuder', 'Personen80JaarOfOuder'],
-            'huishoudens': ['TotaalParticuliereHuishoudens', 'ParticuliereHuishoudens'],
-        },
-        'verplicht': [],
-    },
 }
 
 REGIO_VELDEN = ['WijkenEnBuurten', 'RegioS', 'Regio', 'RegioSVanTot']
+
+# De regionale bevolkingsprognose is opzettelijk niet opgenomen. CBS en PBL
+# hebben de detailcijfers van StatLine verwijderd omdat die onvoldoende
+# betrouwbaar bleken, en adviseren uitdrukkelijk ze niet te gebruiken.
+# Wat resteert is het totaal aantal inwoners, en alleen voor gemeenten vanaf
+# 50.000 inwoners.
 
 
 def log(*a):
