@@ -1,0 +1,13 @@
+{
+  "gegenereerd": "2026-10-03T09:47:11Z",
+  "bron": "CBS StatLine open data (opendata.cbs.nl)",
+  "onderwerpen": {},
+  "mislukt": [
+    "nabijheid",
+    "energie",
+    "verkoop",
+    "bodem",
+    "zon",
+    "inkomen"
+  ]
+}
